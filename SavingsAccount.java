@@ -1,5 +1,7 @@
 public class SavingsAccount extends CheckingAccount {
 
+    private static final long serialVersionUID = 1L;
+
     private double interestRate;
 
     public SavingsAccount() {

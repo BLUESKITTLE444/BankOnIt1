@@ -1,11 +1,15 @@
 import java.util.Scanner;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 public class Customer extends User {
+
+    private static final long serialVersionUID = 1L;
 
     private CheckingAccount checking;
     private SavingsAccount savings;
 
-    private Scanner input;
+    private transient Scanner input;
 
     public Customer() {
 
@@ -91,6 +95,14 @@ public class Customer extends User {
         System.out.println("PIN changed.");
     }
 
+    public SavingsAccount getSavingsAccount() {
+        return savings;
+    }
+
+    public CheckingAccount getCheckingAccount() {
+        return checking;
+    }
+
     @Override
     public String getReport() {
 
@@ -101,15 +113,10 @@ public class Customer extends User {
                 + savings.getBalanceString();
     }
 
-    public static void main(String[] args) {
+    private void readObject(ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
 
-        Customer customer = new Customer();
-
-        if (customer.login()) {
-            System.out.println("Login Successful");
-            customer.start();
-        } else {
-            System.out.println("Login Failed");
-        }
+        in.defaultReadObject();
+        input = new Scanner(System.in);
     }
 }

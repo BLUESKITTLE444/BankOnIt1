@@ -1,21 +1,20 @@
 import java.io.Serializable;
-import java.util.Scanner;
 
 public abstract class User
         implements HasMenu, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String userName;
     private String PIN;
 
     public boolean login() {
 
-        Scanner input = new Scanner(System.in);
-
         System.out.print("User name: ");
-        String username = input.nextLine();
+        String username = Console.input.nextLine();
 
         System.out.print("PIN: ");
-        String pin = input.nextLine();
+        String pin = Console.input.nextLine();
 
         return login(username, pin);
     }

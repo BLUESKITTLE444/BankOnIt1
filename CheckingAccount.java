@@ -1,9 +1,14 @@
 import java.util.Scanner;
+import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
-public class CheckingAccount implements HasMenu {
+public class CheckingAccount implements HasMenu, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private double balance;
-    private Scanner input;
+    private transient Scanner input;
 
     public CheckingAccount() {
         balance = 0.0;
@@ -45,7 +50,12 @@ public class CheckingAccount implements HasMenu {
         System.out.print("How much to deposit? ");
 
         double amount = getDouble();
-        balance += amount;
+
+        if (amount > 0) {
+            balance += amount;
+        } else {
+            System.out.println("Invalid deposit amount.");
+        }
 
         System.out.println("New balance: " + getBalanceString());
     }
@@ -55,7 +65,12 @@ public class CheckingAccount implements HasMenu {
         System.out.print("How much to withdraw? ");
 
         double amount = getDouble();
-        balance -= amount;
+
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+        } else {
+            System.out.println("Invalid withdrawal amount.");
+        }
 
         System.out.println("New balance: " + getBalanceString());
     }
@@ -78,39 +93,34 @@ public class CheckingAccount implements HasMenu {
 
     @Override
     public void start() {
-
         boolean done = false;
 
         while (!done) {
-
             String choice = menu();
 
             switch (choice) {
-
                 case "0":
                     done = true;
                     break;
-
                 case "1":
                     checkBalance();
                     break;
-
                 case "2":
                     makeDeposit();
                     break;
-
                 case "3":
                     makeWithdrawal();
                     break;
-
                 default:
                     System.out.println("Invalid choice");
             }
         }
     }
 
-    public static void main(String[] args) {
-        CheckingAccount acct = new CheckingAccount();
-        acct.start();
+    private void readObject(ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+
+        in.defaultReadObject();
+        input = new Scanner(System.in);
     }
 }
